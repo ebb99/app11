@@ -1,0 +1,288 @@
+console.log("✅ admin_dashboard.js geladen");
+// ===============================
+// Helper
+// ===============================
+async function api(url, options = {}) {
+    const res = await fetch(url, {
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        ...options
+    });
+
+    if (!res.ok) {
+        const txt = await res.text();
+        throw new Error(txt || res.statusText);
+    }
+
+    return res.status === 204 ? null : res.json();
+}
+
+function $(id) {
+    return document.getElementById(id);
+}
+
+// ===============================
+// INIT
+// ===============================
+document.addEventListener("DOMContentLoaded", () => {
+
+    ladeVereine();
+    ladeSpiele();
+    ladeUser();
+
+    $("logoutBtn")?.addEventListener("click", logout);
+    $("saveVerein")?.addEventListener("click", vereinSpeichern);
+    $("deleteVerein")?.addEventListener("click", vereinLoeschen);
+    $("saveSpiel")?.addEventListener("click", spielSpeichern);
+    $("deleteSpiel")?.addEventListener("click", spielLoeschen);
+    $("saveErgebnis")?.addEventListener("click", ergebnisSpeichernUndAuswerten);
+    $("userForm")?.addEventListener("submit", userAnlegen);
+});
+
+// ===============================
+// Logout
+// ===============================
+async function logout() {
+    await api("/api/logout", { method: "POST" });
+    location.href = "/";
+}
+
+
+function $(id) {
+    return document.getElementById(id);
+}
+
+// ===============================
+// Start
+// ===============================
+document.addEventListener("DOMContentLoaded", () => {
+    console.log("📄 DOM geladen");
+});
+
+// ===============================
+// Vereine
+// ===============================
+async function ladeVereine() {
+    const vereine = await api("/api/vereine");
+
+    ["vereineSelect", "heimSelect", "gastSelect"].forEach(id => $(id).innerHTML = "");
+
+    vereine.forEach(v => {
+        ["vereineSelect", "heimSelect", "gastSelect"].forEach(id => {
+            $(id).appendChild(new Option(v.vereinsname, v.id));
+        });
+    });
+}
+
+async function vereinSpeichern() {
+    const name = $("vereinInput").value.trim();
+    const logo = $("logoInput").value.trim();
+    if (!name) return alert("Name fehlt");
+
+    await api("/api/vereine", {
+        method: "POST",
+         body: JSON.stringify({ vereinsname: name, url: logo })
+    });
+    alert("✅ Verein gespeichert");
+    $("vereinInput").value = "";
+    $("logoInput").value = "";
+    ladeVereine();
+}
+
+async function vereinLoeschen() {
+    const id = $("vereineSelect").value;
+    if (!id) return;
+
+    await api(`/api/vereine/${id}`, { method: "DELETE" });
+    ladeVereine();
+}
+
+// ===============================
+// Spiele
+// ===============================
+async function ladeSpiele() {
+    const spiele = await api("/api/spiele");
+    $("spieleSelect").innerHTML = "";
+
+    spiele.forEach(s => {
+        const text = `${new Date(s.anstoss).toLocaleString("de-DE", {
+    dateStyle: "short",
+    timeStyle: "short"
+})}
+        
+        ${s.heimverein} : ${s.gastverein}
+        ${s.heimtore}:${s.gasttore} (${s.statuswort})`;
+
+        $("spieleSelect").appendChild(new Option(text, s.id));
+    });
+}
+
+
+    
+ async function spielSpeichern() {
+    const heimSelect = $("heimSelect");
+    const gastSelect = $("gastSelect");
+
+    const heimId = heimSelect.value;
+    const gastId = gastSelect.value;
+
+    const heimName = heimSelect.selectedOptions[0]?.text;
+    const gastName = gastSelect.selectedOptions[0]?.text;
+
+    if (!heimId || !gastId) {
+        return alert("Bitte Vereine wählen");
+    }
+
+    // 🔹 Vereine inkl. Logo-URL laden
+    const vereine = await api("/api/vereine");
+
+    const heimVerein = vereine.find(v => v.id == heimId);
+    const gastVerein = vereine.find(v => v.id == gastId);
+
+    if (!heimVerein || !gastVerein) {
+        return alert("Vereinsdaten nicht gefunden");
+    }
+
+    // 🔹 Spiel speichern
+    await api("/api/spiele", {
+        method: "POST",
+        body: JSON.stringify({
+            anstoss: $("anstosszeitInput").value,
+            heimverein: heimName,
+            gastverein: gastName,
+            heimbild: heimVerein.url,
+            gastbild: gastVerein.url,     
+            heimtore: 0,
+            gasttore: 0,
+            statuswort: "geplant"
+        })
+    });
+    alert("✅ Spiel gespeichert");
+    ladeSpiele();
+}
+async function spielLoeschen() {
+    const id = $("spieleSelect").value;
+    if (!id) return;
+    console.log("Lösche Spiel mit ID:", id);
+    await api(`/api/spiele/${id}`, { method: "DELETE" });
+    ladeSpiele();
+}
+
+async function ergebnisSpeichernUndAuswerten() {
+    const id = $("spieleSelect").value;
+    if (!id) return alert("Spiel wählen");
+
+    const heimtore = Number($("heimtoreInput").value);
+    const gasttore = Number($("gasttoreInput").value);
+
+    try {
+        const res = await api(`/api/spiele/${id}/ergebnis`, {
+            method: "PATCH",
+            body: JSON.stringify({ heimtore, gasttore })
+        });
+
+        alert("✅ Ergebnis gespeichert & Punkte berechnet");
+        ladeSpiele();
+
+    } catch (err) {
+        alert("❌ Fehler bei der Auswertung");
+        console.error(err);
+    }
+}
+
+
+
+/// ===============================
+// Benutzerverwaltung
+// ===============================
+async function ladeUser() {
+    try {
+        const res = await fetch("/api/users", {
+            credentials: "include"
+        });
+
+        if (!res.ok) {
+            throw new Error("User laden fehlgeschlagen");
+        }
+
+        const users = await res.json();
+        console.log("👤 USERS:", users);
+
+        const tbody = document.getElementById("userTable");
+        tbody.innerHTML = "";
+
+        users.forEach(u => {
+            const tr = document.createElement("tr");
+
+            tr.innerHTML = `
+                <td>${u.name}</td>
+                <td>${u.role}</td>
+                <td>
+                    <button data-id="${u.id}">Löschen</button>
+                </td>
+            `;
+
+            tr.querySelector("button").addEventListener("click", async () => {
+                if (!confirm(`User ${u.name} löschen?`)) return;
+
+                await fetch(`/api/users/${u.id}`, {
+                    method: "DELETE",
+                    credentials: "include"
+                });
+
+                ladeUser();
+            });
+
+            tbody.appendChild(tr);
+        });
+
+    } catch (err) {
+        console.error("❌ ladeUser:", err);
+        alert("Benutzer konnten nicht geladen werden");
+    }
+}
+
+async function userAnlegen(e) {
+    e.preventDefault();
+
+    const name = $("userName").value.trim();
+    const password = $("userPassword").value;
+    const role = $("userRole").value;
+
+    if (!name || !password) {
+        return alert("Name und Passwort erforderlich");
+    }
+
+    const res = await fetch("/api/users", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, password, role })
+    });
+
+    if (!res.ok) {
+        const t = await res.text();
+        alert("Fehler: " + t);
+        return;
+    }
+
+    $("userForm").reset();
+    ladeUser();
+}
+async function ladeRangliste() {
+    const daten = await api("/api/rangliste");
+
+    const tbody = $("ranglisteBody");
+    tbody.innerHTML = "";
+
+    daten.forEach((u, i) => {
+        tbody.innerHTML += `
+            <tr>
+                <td>${i + 1}</td>
+                <td>${u.name}</td>
+                <td>tips ${u.punkte}</td>
+
+            </tr>
+        `;
+    });
+}
