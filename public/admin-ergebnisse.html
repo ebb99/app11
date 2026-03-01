@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Ergebnisverwaltung</title>
+
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+        th { background: #eee; }
+        input { width: 60px; text-align: center; padding: 5px; }
+        button { padding: 8px 14px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+<h2>Ergebnisse beendeter Spiele</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Anstoß</th>
+            <th>Heim</th>
+            <th>Gast</th>
+            <th>Tore Heim</th>
+            <th>Tore Gast</th>
+        </tr>
+    </thead>
+    <tbody id="ergTable"></tbody>
+</table>
+
+<button onclick="saveAll()">ALLE Ergebnisse speichern</button>
+
+<div id="msg" style="margin-top:20px; font-weight:bold;"></div>
+
+<script>
+let spiele = [];
+
+// -------------------------------------------------------------
+// BEENDETE SPIELE LADEN
+// -------------------------------------------------------------
+async function loadErgebnisse() {
+    const res = await fetch("/api/spiele/beendet");
+    spiele = await res.json();
+
+    const tbody = document.getElementById("ergTable");
+    tbody.innerHTML = "";
+
+    spiele.forEach(s => {
+        tbody.innerHTML += `
+            <tr>
+                <td>${s.id}</td>
+                <td>${s.spielbeginn_formatiert}</td>
+                <td>${s.heim_name}</td>
+                <td>${s.gast_name}</td>
+                <td><input id="home_${s.id}" type="number" min="0" value="${s.heimtore ?? ""}"></td>
+                <td><input id="gast_${s.id}" type="number" min="0" value="${s.gasttore ?? ""}"></td>
+            </tr>
+        `;
+    });
+}
+
+// -------------------------------------------------------------
+// ALLE SPEICHERN
+// -------------------------------------------------------------
+async function saveAll() {
+    const updates = spiele.map(s => ({
+        id: s.id,
+        heimtore: Number(document.getElementById("home_" + s.id).value),
+        gasttore: Number(document.getElementById("gast_" + s.id).value)
+    }));
+
+    const msg = document.getElementById("msg");
+    msg.style.color = "blue";
+    msg.innerText = "Speichern läuft...";
+
+    try {
+        const res = await fetch("/api/spiele/beendet/update", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(updates)
+        });
+
+        const json = await res.json();
+        console.log("SERVER ANTWORT:", json);
+
+        msg.style.color = "green";
+        msg.innerText = "Ergebnisse erfolgreich gespeichert!";
+
+        await loadErgebnisse();
+
+        setTimeout(() => msg.innerText = "", 5000);
+
+    } catch (err) {
+        msg.style.color = "red";
+        msg.innerText = "Fehler beim Speichern!";
+        console.error(err);
+    }
+}
+
+// -------------------------------------------------------------
+// AUTOMATISCH BEIM LADEN
+// -------------------------------------------------------------
+document.addEventListener("DOMContentLoaded", () => {
+    loadErgebnisse();
+});
+</script>
+
+</body>
+</html>
