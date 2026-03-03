@@ -310,7 +310,7 @@ app.delete("/api/vereine/:id", requireAdmin, async (req, res) => {
     }
 });
 
-// bis hierher sychronisiert mit app1
+// bis hierher synchronisiert mit app1
 
 // ===============================
 // Spiele + eigene Tipps neu
@@ -506,6 +506,7 @@ app.post("/api/tips", requireLogin, requireTipper, async (req, res) => {
         }
 
         // Tipp speichern / überschreiben
+        console.log(`💾 Tipp speichern: User ${req.session.user.name} tippt ${heimtipp}:${gasttipp} auf Spiel ${spiel_id}`);
         const result = await pool.query(`
             INSERT INTO tips (user_id, spiel_id, heimtipp, gasttipp)
             VALUES ($1,$2,$3,$4)
