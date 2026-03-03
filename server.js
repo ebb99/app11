@@ -506,7 +506,7 @@ app.post("/api/tips", requireLogin, requireTipper, async (req, res) => {
         }
 
         // Tipp speichern / überschreiben
-        console.log(`💾 Tipp speichern: User ${req.session.user.name} tippt ${heimtipp}:${gasttipp} auf Spiel ${spiel_id}`);
+        // console.log(`💾 Tipp speichern: User ${req.session.user.name} tippt ${heimtipp}:${gasttipp} auf Spiel ${spiel_id}`);
         const result = await pool.query(`
             INSERT INTO tips (user_id, spiel_id, heimtipp, gasttipp)
             VALUES ($1,$2,$3,$4)
