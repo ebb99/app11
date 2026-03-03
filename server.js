@@ -129,23 +129,6 @@ cron.schedule("* * * * *", async () => {
 });
 
 
-app.get("/api/rangliste", requireLogin, async (req, res) => {
-    const result = await pool.query(`
-  SELECT
-    u.id,
-    u.name,
-    COALESCE(SUM(t.punkte), 0) AS punkte,
-    COUNT(t.id) AS tipps_anzahl
-FROM users u
-LEFT JOIN tips t ON t.user_id = u.id
-GROUP BY u.id, u.name
-ORDER BY punkte DESC, u.name
-    `);
-    res.json(result.rows);
-});
-
-
-
 // ===============================
 // Session / Auth API
 // ===============================
@@ -191,45 +174,101 @@ app.get("/api/session", (req, res) => {
 });
 
 
-// ===============================
-// Zeiten API
-// ===============================
-app.get("/api/zeiten", requireLogin, async (req, res) => {
+
+// BEENDTE SPIELE (statuswort = 'beendet')
+app.get("/api/spiele/beendet", async (req, res) => {
     try {
-        const result = await pool.query(
-            "SELECT id, zeit FROM zeiten ORDER BY zeit"
-        );
+        const result = await pool.query(`
+            SELECT
+                id,
+                anstoss,
+                TO_CHAR(anstoss, 'DD.MM.YYYY HH24:MI') AS spielbeginn_formatiert,
+                heimverein AS heim_name,
+                gastverein AS gast_name,
+                heimtore,
+                gasttore,
+                heimbild,
+                gastbild
+            FROM spiele
+            WHERE statuswort = 'beendet'
+            ORDER BY anstoss ASC
+        `);
+
         res.json(result.rows);
+
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: "Zeiten laden fehlgeschlagen" });
+        console.error("Fehler beim Laden der beendeten Spiele:", err);
+        res.status(500).json({ error: "Fehler beim Laden der Daten" });
     }
 });
 
-app.post("/api/zeiten", requireAdmin, async (req, res) => {
-    const { zeit } = req.body;
+app.post("/api/spiele/beendet/update", async (req, res) => {
+    const updates = req.body;
 
     try {
-        const result = await pool.query(
-            "INSERT INTO zeiten (zeit) VALUES ($1) RETURNING *",
-            [zeit]
-        );
-        res.json(result.rows[0]);
+        for (const u of updates) {
+
+            // 1️⃣ Spiel aktualisieren
+            const spielRes = await pool.query(
+                `UPDATE spiele
+                 SET heimtore = $1,
+                     gasttore = $2,
+                     statuswort = 'ausgewertet'
+                 WHERE id = $3
+                 RETURNING *`,
+                 [u.heimtore, u.gasttore, u.id]
+            );
+
+            if (!spielRes.rows.length) continue;
+
+            const heimtore = u.heimtore;
+            const gasttore = u.gasttore;
+
+            // 2️⃣ Alle Tipps zu diesem Spiel laden
+            const tipsRes = await pool.query(`
+                SELECT id, heimtipp, gasttipp
+                FROM tips
+                WHERE spiel_id = $1
+            `, [u.id]);
+
+            // 3️⃣ Punkte berechnen
+            for (const t of tipsRes.rows) {
+                let punkte = 0;
+
+                // Exakte Treffer
+                if (t.heimtipp === heimtore && t.gasttipp === gasttore) {
+                    punkte = 5;
+                }
+                // Tendenz + Tordifferenz
+                else if (t.heimtipp - t.gasttipp === heimtore - gasttore) {
+                    punkte = 3;
+                }
+                // Nur richtige Tendenz
+                else if ((t.heimtipp - t.gasttipp) * (heimtore - gasttore) > 0) {
+                    punkte = 1;
+                }
+
+                // 4️⃣ Punkte speichern
+                await pool.query(`
+                    UPDATE tips
+                    SET punkte = $1
+                    WHERE id = $2
+                `, [punkte, t.id]);
+            }
+        }
+
+        res.json({
+            message: "Alle Spielergebnisse gespeichert und Tipps ausgewertet!"
+        });
+
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: "Zeit speichern fehlgeschlagen" });
+        console.error("Fehler beim Speichern der Ergebnisse:", err);
+        res.status(500).json({ error: "Fehler beim Speichern" });
     }
 });
 
-app.delete("/api/zeiten/:id", requireAdmin, async (req, res) => {
-    try {
-        await pool.query("DELETE FROM zeiten WHERE id=$1", [req.params.id]);
-        res.json({ success: true });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: "Zeit löschen fehlgeschlagen" });
-    }
-});
+
+
 
 // ===============================
 // Vereine API
@@ -271,7 +310,7 @@ app.delete("/api/vereine/:id", requireAdmin, async (req, res) => {
     }
 });
 
-
+// bis hierher sychronisiert mit app1
 
 // ===============================
 // Spiele + eigene Tipps neu
@@ -588,7 +627,20 @@ app.delete("/api/users/:id", requireAdmin, async (req, res) => {
     res.json({ success: true });
 });
 
-
+app.get("/api/rangliste", requireLogin, async (req, res) => {
+    const result = await pool.query(`
+  SELECT
+    u.id,
+    u.name,
+    COALESCE(SUM(t.punkte), 0) AS punkte,
+    COUNT(t.id) AS tipps_anzahl
+FROM users u
+LEFT JOIN tips t ON t.user_id = u.id
+GROUP BY u.id, u.name
+ORDER BY punkte DESC, u.name
+    `);
+    res.json(result.rows);
+});
 
 const HOST = '0.0.0.0'; // Lausche auf allen verfügbaren Netzwerkschnittstellen
 
