@@ -325,19 +325,16 @@ app.get("/api/spiele", requireLogin, async (req, res) => {
                 s.anstoss,
                 s.heimverein,
                 s.gastverein,
-                s.heimbild,
-                s.gastbild,
-                s.heimtore,
-                s.gasttore,
                 s.statuswort,
                 t.heimtipp,
                 t.gasttipp
             FROM spiele s
             LEFT JOIN tips t
-              ON t.spiel_id = s.id
+              ON t.spiel_id = s.id  
              AND t.user_id = $1
             ORDER BY s.anstoss DESC
         `, [userId]);
+
         res.json(result.rows);
 
     } catch (err) {
@@ -348,13 +345,11 @@ app.get("/api/spiele", requireLogin, async (req, res) => {
 
 
 app.post("/api/spiele", requireAdmin, async (req, res) => {
-    // const { anstoss, heimverein, gastverein, heimtore, gasttore, statuswort } = req.body;
+   
     const {
         anstoss,
         heimverein,
         gastverein,
-        heimbild,
-        gastbild,
         heimtore,
         gasttore,
         statuswort
@@ -363,14 +358,12 @@ app.post("/api/spiele", requireAdmin, async (req, res) => {
     try {
         const result = await pool.query(
             `INSERT INTO spiele
-             (anstoss, heimverein, gastverein, heimbild, gastbild, heimtore, gasttore, statuswort)
-             VALUES ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING *`,
+             (anstoss, heimverein, gastverein, heimtore, gasttore, statuswort)
+             VALUES ($1,$2,$3,$4,$5,$6 RETURNING *`,
             [
                 anstoss,
                 heimverein,
                 gastverein,
-                heimbild,
-                gastbild,
                 heimtore,
                 gasttore,
                 statuswort
@@ -383,6 +376,8 @@ app.post("/api/spiele", requireAdmin, async (req, res) => {
         res.status(500).json({ error: "Spiel anlegen fehlgeschlagen" });
     }
 });
+
+// synchronisiert mit app1 bis hierher
 
 app.patch("/api/spiele/:id/ergebnis", requireAdmin, async (req, res) => {
     const spielId = req.params.id;
