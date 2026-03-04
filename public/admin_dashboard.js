@@ -47,17 +47,11 @@ async function logout() {
     location.href = "/";
 }
 
-
 function $(id) {
     return document.getElementById(id);
 }
 
-// ===============================
-// Start
-// ===============================
-document.addEventListener("DOMContentLoaded", () => {
-    console.log("📄 DOM geladen");
-});
+// synchronisiert mit app1 bis hierher
 
 // ===============================
 // Vereine
