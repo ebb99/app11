@@ -470,6 +470,7 @@ app.delete("/api/spiele/:id", requireAdmin, async (req, res) => {
 
         res.json({ ok: true, id });
 
+
     } catch (err) {
         console.error("Spiel löschen Fehler:", err);
         res.status(500).json({ error: "Spiel konnte nicht gelöscht werden" });
@@ -478,6 +479,8 @@ app.delete("/api/spiele/:id", requireAdmin, async (req, res) => {
 
 app.post("/api/tips", requireLogin, requireTipper, async (req, res) => {
     const { spiel_id, heimtipp, gasttipp } = req.body;
+
+// console.log("Tipp-Request:", req.body); // ← WICHTIG
 
     try {
         // Spiel laden
