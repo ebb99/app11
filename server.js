@@ -480,7 +480,7 @@ app.delete("/api/spiele/:id", requireAdmin, async (req, res) => {
 app.post("/api/tips", requireLogin, requireTipper, async (req, res) => {
     const { spiel_id, heimtipp, gasttipp } = req.body;
 
-// console.log("Tipp-Request:", req.body); // ← WICHTIG
+console.log("Tipp-Request:", req.body); // ← WICHTIG
 
     try {
         // Spiel laden
