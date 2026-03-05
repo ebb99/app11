@@ -608,7 +608,7 @@ app.get("/api/users", requireAdmin, async (req, res) => {
 app.post("/api/users", requireAdmin, async (req, res) => {
     const { name, password, role } = req.body;
 
-    console.log("👤 NEW USER:", req.body); // ← WICHTIG
+    // console.log("👤 NEW USER:", req.body); // ← WICHTIG
 
     if (!name || !password || !role) {
         return res.status(400).json({ error: "Daten fehlen" });

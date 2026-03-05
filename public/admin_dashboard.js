@@ -140,8 +140,8 @@ async function ladeSpiele() {
     const gastbild = gastVerein.url ;
 
     // 🔹 Spiel speichern
-    alert(`Speichere Spiel:\n${heimName} vs ${gastName}\nAnstoss: ${$("anstosszeitInput").value}`);
-    alert(`Heimbild: ${heimbild}\nGastbild: ${gastbild}`);
+    // alert(`Speichere Spiel:\n${heimName} vs ${gastName}\nAnstoss: ${$("anstosszeitInput").value}`);
+    // alert(`Heimbild: ${heimbild}\nGastbild: ${gastbild}`);
     await api("/api/spiele", {
         method: "POST",
         body: JSON.stringify({
@@ -155,8 +155,9 @@ async function ladeSpiele() {
             statuswort: "geplant"
         })
     });
-    alert("✅ Spiel gespeichert");
-    alert(heimVerein.url);
+    $("meldung").textContent = "Spiel gespeichert";
+    // alert("✅ Spiel gespeichert");
+    // alert(heimVerein.url);
     ladeSpiele();
 }
 async function spielLoeschen() {
@@ -205,7 +206,7 @@ async function ladeUser() {
         }
 
         const users = await res.json();
-        console.log("👤 USERS:", users);
+        // console.log("👤 USERS:", users);
 
         const tbody = document.getElementById("userTable");
         tbody.innerHTML = "";
