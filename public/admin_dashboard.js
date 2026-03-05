@@ -145,8 +145,8 @@ async function ladeSpiele() {
             anstoss: $("anstosszeitInput").value,
             heimverein: heimName,
             gastverein: gastName,
-            heimbild: heimVerein.url,
-            gastbild: gastVerein.url,     
+            // heimbild: heimVerein.url,
+            // gastbild: gastVerein.url,     
             heimtore: 0,
             gasttore: 0,
             statuswort: "geplant"
