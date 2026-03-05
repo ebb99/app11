@@ -138,7 +138,7 @@ async function ladeSpiele() {
     }
 
     // 🔹 Spiel speichern
-    alert(`Speichere Spiel:\n${heimName} vs ${gastName}\nAnstoß: ${$("anstosszeitInput").value}`);
+    alert(`Speichere Spiel:\n${heimName} vs ${gastName}\nAnstoss: ${$("anstosszeitInput").value}`);
     await api("/api/spiele", {
         method: "POST",
         body: JSON.stringify({

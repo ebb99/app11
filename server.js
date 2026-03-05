@@ -359,7 +359,7 @@ console.log("👂 /api/spiele POST:", req.body);
         const result = await pool.query(
             `INSERT INTO spiele
              (anstoss, heimverein, gastverein, heimtore, gasttore, statuswort)
-             VALUES ($1,$2,$3,$4,$5,$6 RETURNING *`,
+             VALUES ($1,$2,$3,$4,$5,$6) RETURNING *`,
             [
                 anstoss,
                 heimverein,
