@@ -354,7 +354,7 @@ app.post("/api/spiele", requireAdmin, async (req, res) => {
         gasttore,
         statuswort
     } = req.body;
-console.log("👂 /api/spiele POST:", req.body);  
+// console.log("👂 /api/spiele POST:", req.body);  
     try {
         const result = await pool.query(
             `INSERT INTO spiele
@@ -371,7 +371,7 @@ console.log("👂 /api/spiele POST:", req.body);
            
              // [anstoss, heimverein, gastverein, heimtore, gasttore, statuswort]
         );
-        console.log("👂 /api/spiele POST - Result:", result.rows[0]);
+        // console.log("👂 /api/spiele POST - Result:", result.rows[0]);
         res.json(result.rows[0]);
     } catch (err) {
         console.error("❌ /api/spiele POST:", err);
