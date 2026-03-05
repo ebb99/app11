@@ -310,7 +310,6 @@ app.delete("/api/vereine/:id", requireAdmin, async (req, res) => {
     }
 });
 
-// bis hierher synchronisiert mit app1
 
 // ===============================
 // Spiele + eigene Tipps neu
@@ -326,6 +325,8 @@ app.get("/api/spiele", requireLogin, async (req, res) => {
                 s.heimverein,
                 s.gastverein,
                 s.statuswort,
+                s.heimbild,
+                s.gastbild,
                 t.heimtipp,
                 t.gasttipp
             FROM spiele s
@@ -343,13 +344,14 @@ app.get("/api/spiele", requireLogin, async (req, res) => {
     }
 });
 
-
 app.post("/api/spiele", requireAdmin, async (req, res) => {
  
     const {
         anstoss,
         heimverein,
         gastverein,
+        heimbild,
+        gastbild,    
         heimtore,
         gasttore,
         statuswort
@@ -358,12 +360,14 @@ app.post("/api/spiele", requireAdmin, async (req, res) => {
     try {
         const result = await pool.query(
             `INSERT INTO spiele
-             (anstoss, heimverein, gastverein, heimtore, gasttore, statuswort)
-             VALUES ($1,$2,$3,$4,$5,$6) RETURNING *`,
+             (anstoss, heimverein, gastverein, heimbild, gastbild, heimtore, gasttore, statuswort)
+             VALUES ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING *`,
             [
                 anstoss,
                 heimverein,
                 gastverein,
+                heimbild,
+                gastbild,
                 heimtore,
                 gasttore,
                 statuswort
@@ -422,7 +426,6 @@ app.patch("/api/spiele/:id/ergebnis", requireAdmin, async (req, res) => {
                 punkte = 1;
             }
 
-
             await pool.query(`
                 UPDATE tips
                 SET
@@ -442,7 +445,6 @@ app.patch("/api/spiele/:id/ergebnis", requireAdmin, async (req, res) => {
         res.status(500).json({ error: "Auswertung fehlgeschlagen" });
     }
 });
-
 
 
 // ===============================
@@ -480,7 +482,7 @@ app.delete("/api/spiele/:id", requireAdmin, async (req, res) => {
 app.post("/api/tips", requireLogin, requireTipper, async (req, res) => {
     const { spiel_id, heimtipp, gasttipp } = req.body;
 
-console.log("Tipp-Request:", req.body); // ← WICHTIG
+// console.log("Tipp-Request:", req.body); // ← WICHTIG
 
     try {
         // Spiel laden
@@ -628,22 +630,22 @@ app.delete("/api/users/:id", requireAdmin, async (req, res) => {
     res.json({ success: true });
 });
 
-app.get("/api/rangliste", requireLogin, async (req, res) => {
-    const result = await pool.query(`
-  SELECT
-    u.id,
-    u.name,
-    COALESCE(SUM(t.punkte), 0) AS punkte,
-    COUNT(t.id) AS tipps_anzahl
-FROM users u
-LEFT JOIN tips t ON t.user_id = u.id
-GROUP BY u.id, u.name
-ORDER BY punkte DESC, u.name
-    `);
-    res.json(result.rows);
-});
+// app.get("/api/rangliste", requireLogin, async (req, res) => {
+//     const result = await pool.query(`
+//   SELECT
+//     u.id,
+//     u.name,
+//     COALESCE(SUM(t.punkte), 0) AS punkte,
+//     COUNT(t.id) AS tipps_anzahl
+// FROM users u
+// LEFT JOIN tips t ON t.user_id = u.id
+// GROUP BY u.id, u.name
+// ORDER BY punkte DESC, u.name
+//     `);
+//     res.json(result.rows);
+// });
 
-const HOST = '0.0.0.0'; // Lausche auf allen verfügbaren Netzwerkschnittstellen
+// const HOST = '0.0.0.0'; // Lausche auf allen verfügbaren Netzwerkschnittstellen
 
 
 // ===============================

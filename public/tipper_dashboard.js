@@ -159,12 +159,17 @@ const options = {
         const tr2 = document.createElement("tr");
         const logoh = s.heimverein + "_logo.png";
 
-let heimLogoHtml;
-if (s.heimbild) {
-    heimLogoHtml = `<img src="${s.heimbild}" alt="${s.heimverein}" class="team-logo">`;
-} else {
-    heimLogoHtml = `<img src="/bilder/${logoh}" alt="${s.heimverein}" class="team-logo">`;
-}
+// let heimLogoHtml;
+// if (s.heimbild) {
+//     heimLogoHtml = `<img src="${s.heimbild}" alt="${s.heimverein}" class="team-logo">`;
+// } else {
+//     heimLogoHtml = `<img src="/bilder/${logoh}" alt="${s.heimverein}" class="team-logo">`;
+// }
+heimLogoHtml = `<img src="${s.heimbild}" alt="${s.heimverein}" class="team-logo">`;
+alert (heimLogoHtml);
+
+heimLogoHtml2 = `<img src="${s.url}" alt="${s.heimverein}" class="team-logo">`;
+alert (heimLogoHtml2);
 
         tr2.innerHTML = `
             <td width="60%"><b>

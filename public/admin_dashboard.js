@@ -136,21 +136,27 @@ async function ladeSpiele() {
     if (!heimVerein || !gastVerein) {
         return alert("Vereinsdaten nicht gefunden");
     }
+    const heimbild = heimVerein.url;
+    const gastbild = gastVerein.url ;
 
     // 🔹 Spiel speichern
     alert(`Speichere Spiel:\n${heimName} vs ${gastName}\nAnstoss: ${$("anstosszeitInput").value}`);
+    alert(`Heimbild: ${heimbild}\nGastbild: ${gastbild}`);
     await api("/api/spiele", {
         method: "POST",
         body: JSON.stringify({
             anstoss: $("anstosszeitInput").value,
             heimverein: heimName,
             gastverein: gastName,
+            heimbild,
+            gastbild,
             heimtore: 0,
             gasttore: 0,
             statuswort: "geplant"
         })
     });
     alert("✅ Spiel gespeichert");
+    alert(heimVerein.url);
     ladeSpiele();
 }
 async function spielLoeschen() {
