@@ -345,7 +345,7 @@ app.get("/api/spiele", requireLogin, async (req, res) => {
 
 
 app.post("/api/spiele", requireAdmin, async (req, res) => {
-   
+ 
     const {
         anstoss,
         heimverein,
@@ -354,7 +354,7 @@ app.post("/api/spiele", requireAdmin, async (req, res) => {
         gasttore,
         statuswort
     } = req.body;
-
+console.log("👂 /api/spiele POST:", req.body);  
     try {
         const result = await pool.query(
             `INSERT INTO spiele
@@ -371,8 +371,10 @@ app.post("/api/spiele", requireAdmin, async (req, res) => {
            
              // [anstoss, heimverein, gastverein, heimtore, gasttore, statuswort]
         );
+        console.log("👂 /api/spiele POST - Result:", result.rows[0]);
         res.json(result.rows[0]);
-    } catch {
+    } catch (err) {
+        console.error("❌ /api/spiele POST:", err);
         res.status(500).json({ error: "Spiel anlegen fehlgeschlagen" });
     }
 });
