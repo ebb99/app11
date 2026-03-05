@@ -20,6 +20,23 @@ async function api(url, options = {}) {
 function $(id) {
     return document.getElementById(id);
 }
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+async function speicherProzess() {
+    $("meldung").textContent = "Spiel gespeichert";
+    $("meldung").style.color = "green";
+
+    // Jetzt funktioniert der Aufruf, da die Funktion oben definiert wurde
+    await sleep(1000);
+
+    $("meldung").textContent = "";
+}
+
+
+
+
+
+
 
 // ===============================
 // INIT
@@ -155,7 +172,8 @@ async function ladeSpiele() {
             statuswort: "geplant"
         })
     });
-    $("meldung").textContent = "Spiel gespeichert";
+  speicherProzess();
+
     // alert("✅ Spiel gespeichert");
     // alert(heimVerein.url);
     ladeSpiele();
