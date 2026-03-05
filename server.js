@@ -506,9 +506,10 @@ console.log(`💡 Tipp-Check: User ${req.session.user.id} tippt ${heimtipp}:${ga
         if (new Date(spiel.anstoss) <= new Date()) {
             return res.status(403).json({ error: "Anstoßzeit überschritten" });
         }
-
+        const spieler = req.session.user.id;
         // Tipp speichern / überschreiben
         console.log(`💾 Tipp speichern: User ${req.session.user.name} tippt ${heimtipp}:${gasttipp} auf Spiel ${spiel_id}`);
+          // Tipp speichern / überschreiben
         const result = await pool.query(`
             INSERT INTO tips (user_id, spiel_id, heimtipp, gasttipp)
             VALUES ($1,$2,$3,$4)
