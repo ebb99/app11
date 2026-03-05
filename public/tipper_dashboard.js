@@ -166,10 +166,10 @@ const options = {
 //     heimLogoHtml = `<img src="/bilder/${logoh}" alt="${s.heimverein}" class="team-logo">`;
 // }
 heimLogoHtml = `<img src="${s.heimbild}" alt="${s.heimverein}" class="team-logo">`;
-alert (heimLogoHtml);
+// alert (heimLogoHtml);
 
-heimLogoHtml2 = `<img src="${s.url}" alt="${s.heimverein}" class="team-logo">`;
-alert (heimLogoHtml2);
+// heimLogoHtml2 = `<img src="${s.url}" alt="${s.heimverein}" class="team-logo">`;
+// alert (heimLogoHtml2);
 
         tr2.innerHTML = `
             <td width="60%"><b>
@@ -196,12 +196,12 @@ alert (heimLogoHtml2);
         // Zeile 3: Gastverein + Tipp
         const tr3 = document.createElement("tr");
         const logog = s.gastverein + "_logo.png";
-let gastLogoHtml;
-if (s.gastbild) {
+// let gastLogoHtml;
+// if (s.gastbild) {
     gastLogoHtml = `<img src="${s.gastbild}" alt="${s.gastverein}" class="team-logo">`;
-} else {
-    gastLogoHtml = `<img src="/bilder/${logog}" alt="${s.gastverein}" class="team-logo">`;
-}
+// } else {
+//     gastLogoHtml = `<img src="/bilder/${logog}" alt="${s.gastverein}" class="team-logo">`;
+// }
         tr3.innerHTML = `
             <td width="60%">
             <b>
