@@ -267,6 +267,47 @@ app.post("/api/spiele/beendet/update", async (req, res) => {
     }
 });
 
+// ===============================
+// Gruppen API
+// ===============================
+app.get("/api/gruppen", requireLogin, async (req, res) => {
+    try {
+        const result = await pool.query(
+            "SELECT id, gruppenname FROM gruppen ORDER BY gruppenname"
+        );
+        res.json(result.rows);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Gruppen laden fehlgeschlagen" });
+    }
+});
+
+app.post("/api/gruppen", requireAdmin, async (req, res) => {
+    const { gruppenname } = req.body; 
+    // console.log("BODY:", req.body);   // DEBUG
+    try {
+        const result = await pool.query(
+            "INSERT INTO gruppen (gruppenname) VALUES ($1) RETURNING *",
+            [gruppenname]
+        );
+        res.json(result.rows[0]);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Gruppe speichern fehlgeschlagen" });
+    }
+});
+
+app.delete("/api/gruppen/:id", requireAdmin, async (req, res) => {
+    console.log("PARAMS:", req.params);   // DEBUG
+    try {
+        await pool.query("DELETE FROM gruppen WHERE id=$1", [req.params.id]);
+        res.json({ success: true });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Gruppe löschen fehlgeschlagen" });
+    }
+});
+
 
 
 
