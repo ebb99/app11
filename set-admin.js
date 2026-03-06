@@ -1,8 +1,6 @@
-/**
- * set-admin.js
- * Usage:
- *   node set-admin.js <username> <password>
- */
+//  * set-admin.js
+//  * Usage:
+//  *   node set-admin.js <username> <password>
 
 require("dotenv").config();
 const { Pool } = require("pg");
@@ -33,7 +31,6 @@ const pool = new Pool({
          ? false 
          : { rejectUnauthorized: false }
 });
-
 
 
 // ===============================
