@@ -46,10 +46,16 @@ document.addEventListener("DOMContentLoaded", () => {
     ladeVereine();
     ladeSpiele();
     ladeUser();
+    ladeGruppen();
 
     $("logoutBtn")?.addEventListener("click", logout);
+
     $("saveVerein")?.addEventListener("click", vereinSpeichern);
     $("deleteVerein")?.addEventListener("click", vereinLoeschen);
+
+    $("saveGruppe")?.addEventListener("click", gruppeSpeichern);
+    $("deleteGruppe")?.addEventListener("click", gruppeLoeschen);
+
     $("saveSpiel")?.addEventListener("click", spielSpeichern);
     $("deleteSpiel")?.addEventListener("click", spielLoeschen);
     $("saveErgebnis")?.addEventListener("click", ergebnisSpeichernUndAuswerten);
@@ -71,6 +77,54 @@ function $(id) {
 // synchronisiert mit app1 bis hierher
 
 // ===============================
+// Gruppen
+// ===============================
+async function ladeGruppen() {
+    const gruppen = await api("/api/gruppen");
+    $("gruppenSelect").innerHTML = "";
+    gruppen.forEach(g => {
+        $("gruppenSelect").appendChild(new Option(g.gruppenname, g.id));
+    });
+} 
+
+async function gruppeSpeichern() {
+    // alert("Gruppe speichern: " + $("gruppeInput").value);
+    const name = $("gruppeInput").value.trim();
+    if (!name) return alert("Name fehlt"); 
+    // alert("Speichere Gruppe: " + name); 
+    await api("/api/gruppen", {
+        method: "POST",
+        headers: {
+        "Content-Type": "application/json"
+        },
+         body: JSON.stringify({ gruppenname: name })
+    });
+    alert("✅ Gruppe gespeichert");
+    $("gruppeInput").value = "";
+    ladeGruppen();
+}
+
+async function gruppeLoeschen() {
+    const id = $("gruppenSelect").value;
+    if (!id) return; 
+    await api(`/api/gruppen/${id}`, { method: "DELETE" });
+    ladeGruppen();       
+}
+
+async function vereinSpeichern() {
+    const name = $("vereinInput").value.trim();
+    const logo = $("logoInput").value.trim();
+    if (!name) return alert("Name fehlt");
+
+    await api("/api/vereine", {
+        method: "POST",
+         body: JSON.stringify({ vereinsname: name, url: logo })
+    });
+    alert("✅ Verein gespeichert");
+    $("vereinInput").value = "";
+    $("logoInput").value = "";
+    ladeVereine();
+}// ===============================
 // Vereine
 // ===============================
 async function ladeVereine() {
