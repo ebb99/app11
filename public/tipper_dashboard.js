@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
            //await ladeGeplanteSpiele();
        
-        $("saveAllTips").addEventListener("click", alleTippsSpeichern);
+        // $("saveAllTips").addEventListener("click", alleTippsSpeichern);
         $("saveAllTips").addEventListener("click", alleTippsSpeichern);
         //console.log("✅ Tipper Dashboard bereit");
 
