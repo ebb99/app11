@@ -257,7 +257,7 @@ async function alleTippsSpeichern() {
 
             // nur speichern, wenn beide Werte vorhanden
             if (t.heimtipp == null || t.gasttipp == null) continue;
-console.log(` Speichere Tipp für Spiel ${spielId}: ${t.heimtipp} : ${t.gasttipp}`);
+// console.log(` Speichere Tipp für Spiel ${spielId}: ${t.heimtipp} : ${t.gasttipp}`);
             await api("/api/tips", {
                 method: "POST",
                 body: JSON.stringify({
