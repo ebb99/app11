@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", async () => {
        // $("saveAllTips").addEventListener("click", tippSpeichern);
         $("logoutBtn")?.addEventListener("click", logout);
         $("tipper_spieleBtn")?.addEventListener("click", () => {
-            location.href = "tipper_spiele.html";
+            window.location.href = "tipper_spiele.html";
         });
 
            //await ladeGeplanteSpiele();
