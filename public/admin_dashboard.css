@@ -31,13 +31,13 @@ p {
   margin: 0;
 } 
 
-#gruppeInput,#gruppenSelect {
+/* #gruppeInput,#gruppenSelect {
   background: white;
   border-style: solid;
    /* padding: 0.5rem; */
-  margin-bottom: 1rem;
-  margin-top: 0px;
-}
+  /* margin-bottom: 1rem;
+  margin-top: 0px; */
+
 
 button {
   background: blue;
@@ -45,24 +45,24 @@ button {
   border-style:  solid;
   border-color: white;
   padding: 0.5rem;
-  margin-bottom: 1rem;
+
   
 }
 select {
   background: white;
   border-style:  solid;
   border-color: rgb(127, 141, 221);
-   padding: 0.5rem;
-  margin-bottom: 1rem;
+   /* padding: 0.5rem;
+  margin-bottom: 1rem; */
  
 }  
 
 #anstosszeitInput {
   background: rgb(193, 202, 233);
   border-style: solid;
-  font-size: 12px;
+  /* font-size: 12px;
   text-align: center;
-  padding: 0.5rem;
+  padding: 0.5rem; */
 }
 
 
@@ -111,21 +111,21 @@ select {
   margin-bottom: 1rem;
 
 }
-.form-control {
+/* .form-control {
   background: white;
   border-style: solid;
   /* padding: 0.5rem; */
   /* margin-bottom: 1rem; */
   
-}
+/* } */ */
 
-.input-form-control {
+/* .input-form-control {
   background: white;
-  border-style: solid;
+  border-style: solid; */
   /* padding: 0.5rem; */
   /* margin-bottom: 1rem; */
   
-}
+/* } */
 .selectBezeichnung {
   background: white;
   /* border-style: solid; */
@@ -134,4 +134,22 @@ select {
   /* margin-bottom: 1rem; */
  margin-top:  0px;
  margin-bottom:  2px
+}
+.spiel-zeile{
+    display: flex;
+    gap: 10px;          /* Abstand zwischen Feldern */
+    align-items: center;
+}
+
+.spiel-zeile select,
+.spiel-zeile input
+{
+    /* flex: 1;            alle gleich breit */
+    height: 32px;
+    box-sizing: border-box;
+}
+
+
+.spiel-zeile button{
+    flex: 0 0 140px;
 }

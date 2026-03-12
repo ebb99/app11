@@ -44,9 +44,9 @@ async function speicherProzess() {
 document.addEventListener("DOMContentLoaded", () => {
 
     ladeVereine();
-    ladeSpiele();
     ladeUser();
     ladeGruppen();
+    ladeSpiele();
 
     $("logoutBtn")?.addEventListener("click", logout);
 
@@ -106,16 +106,6 @@ async function ladeGruppen() {
 }
 
 
-// async function ladeGruppen() {
-//     const gruppen = await api("/api/gruppen");
-//     $("gruppenSelect").innerHTML = "";
-
-//     gruppen.forEach(g => {
-//         $("gruppenSelect").appendChild(new Option(g.gruppenname, g.id));
-      
-//     });
-// } 
-
 
 async function gruppeSpeichern() {
     // alert("Gruppe speichern: " + $("gruppeInput").value); 
@@ -174,21 +164,21 @@ async function vereinSpeichern() {
     ladeVereine();
 }
 
-// ===============================
-// Vereine
-// ===============================
-// async function ladeVereine() {
-//     const vereine = await api("/api/vereine");
-
-//     ["vereineSelect", "heimSelect", "gastSelect"].forEach(id => $(id).innerHTML = "");
-
-//     vereine.forEach(v => {
-//         ["vereineSelect", "heimSelect", "gastSelect"].forEach(id => {
-//             $(id).appendChild(new Option(v.vereinsname, v.id));
-//         });
-//     });
-// }
+function getHeimId(inputId) {
+    const value = $(inputId).value;
+    const option = [...$("heimselect").options]
+        .find(o => o.value === value);
+    return option ? option.dataset.id : null;
+}
  
+function getGastId(inputId) {
+    const value = $(inputId).value;
+    const option = [...$("gastselect").options]
+        .find(o => o.value === value);
+    return option ? option.dataset.id : null;
+}
+
+
 async function ladeVereine() {
     const vereine = await api("/api/vereine");
 
@@ -201,24 +191,14 @@ async function ladeVereine() {
         option.dataset.id = v.id;       // Vereins-ID speichern
         datalist.appendChild(option);
     });
+
+
+        $("allevereine").innerHTML = "";
+    vereine.forEach(v => {
+        $("allevereine").appendChild(new Option(v.vereinsname, v.id));
+    });
 }
 
-
-
-// async function vereinSpeichern() {
-//     const name = $("vereinInput").value.trim();
-//     const logo = $("logoInput").value.trim();
-//     if (!name) return alert("Name fehlt");
-
-//     await api("/api/vereine", {
-//         method: "POST",
-//          body: JSON.stringify({ vereinsname: name, url: logo })
-//     });
-//     alert("✅ Verein gespeichert");
-//     $("vereinInput").value = "";
-//     $("logoInput").value = "";
-//     ladeVereine();
-// }
 
 async function vereinLoeschen() {
     const id = $("vereineSelect").value;
@@ -247,69 +227,73 @@ async function ladeSpiele() {
 }
 
 
-    
- async function spielSpeichern() {
-    const heimSelect = $("heimSelect");
-    const gastSelect = $("gastSelect");
-    const gruppeSelect = $("gruppeSelect");
-// console.log("Heim Select:", heimSelect);
-// console.log("Gast Select:", gastSelect);    
-// console.log("Gruppe Select:", gruppeSelect);
+async function spielSpeichern() {
 
-    const heimId = heimSelect.value;
-    const gastId = gastSelect.value;
-    const gruppeId = gruppeSelect.value;
-// console.log("Ausgewählte IDs - Heim:", heimId, "Gast:", gastId, "Gruppe:", gruppeId);
-    const heimName = heimSelect.selectedOptions[0]?.text;
-    const gastName = gastSelect.selectedOptions[0]?.text;
-    const gruppeName = gruppeSelect.selectedOptions[0]?.text;
+    const heimName = $("heimInput").value;
+    const gastName = $("gastInput").value;
+    const gruppeName = $("gruppeSelect").selectedOptions[0]?.text;
+    const gruppeId = $("gruppeSelect").value;
+    const anstoss = $("anstosszeitInput").value;
 
-    if (!heimId || !gastId) {
-        return alert("Bitte Vereine wählen");
+    if (!heimName || !gastName) {
+        return alert("Bitte Heim- und Gastverein wählen");
     }
 
-    // 🔹 Vereine inkl. Logo-URL laden
+    if (heimName === gastName) {
+        return alert("Heim- und Gastverein dürfen nicht identisch sein");
+    }
+
+    // Vereine laden
     const vereine = await api("/api/vereine");
-    
-    const heimVerein = vereine.find(v => v.id == heimId);
-    const gastVerein = vereine.find(v => v.id == gastId);
+
+    const heimVerein = vereine.find(v => v.vereinsname === heimName);
+    const gastVerein = vereine.find(v => v.vereinsname === gastName);
 
     if (!heimVerein || !gastVerein) {
-        return alert("Vereinsdaten nicht gefunden");
+        return alert("Verein nicht in der Liste gefunden");
     }
+
     const heimbild = heimVerein.url;
-    const gastbild = gastVerein.url ;
+    const gastbild = gastVerein.url;
+
+   
     
-     const gruppen = await api("/api/gruppen");
-    const gruppe = gruppen.find(g => g.id == gruppeId);
-     
-    // 🔹 Spiel speichern
-    // alert(`Speichere Spiel:\n${heimName} vs ${gastName}\nAnstoss: ${$("anstosszeitInput").value}`);
-    // alert(`Heimbild: ${heimbild}\nGastbild: ${gastbild}`);
+console.log({
+    spielgruppe: gruppeName,
+    anstoss,
+    heimverein: heimName,
+    gastverein: gastName,
+    heimbild,
+    gastbild
+});
+
+
     await api("/api/spiele", {
         method: "POST",
         body: JSON.stringify({
-            anstoss: $("anstosszeitInput").value,
+            spielgruppe: gruppeName,
+            anstoss,
             heimverein: heimName,
             gastverein: gastName,
             heimbild,
             gastbild,
             heimtore: 0,
             gasttore: 0,
-            statuswort: "geplant",
-            spielgruppe: gruppeName
+            statuswort: "geplant"
         })
     });
 
+    alert(`Spiel angelegt:\n${heimName} vs ${gastName}`);
+    ladeSpiele();
+}
 
 
-
-  speicherProzess();
+//   speicherProzess();
 
     // alert("✅ Spiel gespeichert");
     // alert(heimVerein.url);
-    ladeSpiele();
-}
+    
+
 
 
 async function spielLoeschen() {
