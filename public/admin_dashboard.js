@@ -85,31 +85,43 @@ function $(id) {
 // ===============================
 // Gruppen
 // ===============================
+
 async function ladeGruppen() {
     const gruppen = await api("/api/gruppen");
-    $("gruppenSelect").innerHTML = "";
+    $("allegruppen").innerHTML = "";
+    const datalist = $("gruppenliste");
+    datalist.innerHTML = "";
+
     gruppen.forEach(g => {
-        $("gruppenSelect").appendChild(new Option(g.gruppenname, g.id));
-        $("gruppeSelect").appendChild(new Option(g.gruppenname, g.id));
+        $("allegruppen").appendChild(new Option(g.gruppenname, g.id));
+        $("gruppeSelect").appendChild(new Option(g.gruppenname, g.id));    
     });
-} 
 
-//  const gruppen = await api("/api/gruppen");
-//     ["gruppeselect", "gruppenselect"].forEach(id => $(id).innerHTML = "");
+    gruppen.forEach(g => {
+        const option = document.createElement("option");
+        option.value = g.gruppenname;   // angezeigter Text
+        option.dataset.id = g.id;       // Gruppen-ID speichern
+        datalist.appendChild(option);
+    });
+}
 
-//     gruppen.forEach(v => {
-//         ["gruppeselect", "gruppenselect"].forEach(id => {
-//             $(id).appendChild(new Option(v.gruppenname, v.id));
-//         });
+
+// async function ladeGruppen() {
+//     const gruppen = await api("/api/gruppen");
+//     $("gruppenSelect").innerHTML = "";
+
+//     gruppen.forEach(g => {
+//         $("gruppenSelect").appendChild(new Option(g.gruppenname, g.id));
+      
 //     });
-
 // } 
 
+
 async function gruppeSpeichern() {
-    // alert("Gruppe speichern: " + $("gruppeInput").value);
-    const name = $("gruppeInput").value.trim();
+    // alert("Gruppe speichern: " + $("gruppeInput").value); 
+       const name = $("gruppeInput").value.trim();
     if (!name) return alert("Name fehlt"); 
-    // alert("Speichere Gruppe: " + name); 
+    alert("Speichere Gruppe: " + name); 
     await api("/api/gruppen", {
         method: "POST",
         headers: {
@@ -117,18 +129,36 @@ async function gruppeSpeichern() {
         },
          body: JSON.stringify({ gruppenname: name })
     });
-    alert("✅ Gruppe gespeichert");
+    // alert("✅ Gruppe gespeichert");
     $("gruppeInput").value = "";
     ladeGruppen();
 }
 
+function getGruppeId(inputId) {
+    const value = $(inputId).value;
+    const option = [...$("gruppenliste").options]
+        .find(o => o.value === value);
+    return option ? option.dataset.id : null;
+}
+
 async function gruppeLoeschen() {
-    const id = $("gruppenSelect").value;
+    // const id = $("gruppenSelect").value;
+    const id = getGruppeId("gruppenSelect");
+    const name = $("gruppenSelect").value;
+    alert(`Lösche Gruppe "${name}" (ID: ${id})`);
+//   console.log("Lösche Gruppe mit ID:", id);
     if (!id) return; 
     await api(`/api/gruppen/${id}`, { method: "DELETE" });
     ladeGruppen();       
 }
 
+
+
+
+
+
+
+
 async function vereinSpeichern() {
     const name = $("vereinInput").value.trim();
     const logo = $("logoInput").value.trim();
@@ -142,35 +172,53 @@ async function vereinSpeichern() {
     $("vereinInput").value = "";
     $("logoInput").value = "";
     ladeVereine();
-}// ===============================
+}
+
+// ===============================
 // Vereine
 // ===============================
+// async function ladeVereine() {
+//     const vereine = await api("/api/vereine");
+
+//     ["vereineSelect", "heimSelect", "gastSelect"].forEach(id => $(id).innerHTML = "");
+
+//     vereine.forEach(v => {
+//         ["vereineSelect", "heimSelect", "gastSelect"].forEach(id => {
+//             $(id).appendChild(new Option(v.vereinsname, v.id));
+//         });
+//     });
+// }
+ 
 async function ladeVereine() {
     const vereine = await api("/api/vereine");
 
-    ["vereineSelect", "heimSelect", "gastSelect"].forEach(id => $(id).innerHTML = "");
+    const datalist = $("vereineList");
+    datalist.innerHTML = "";
 
     vereine.forEach(v => {
-        ["vereineSelect", "heimSelect", "gastSelect"].forEach(id => {
-            $(id).appendChild(new Option(v.vereinsname, v.id));
-        });
+        const option = document.createElement("option");
+        option.value = v.vereinsname;   // angezeigter Text
+        option.dataset.id = v.id;       // Vereins-ID speichern
+        datalist.appendChild(option);
     });
 }
 
-async function vereinSpeichern() {
-    const name = $("vereinInput").value.trim();
-    const logo = $("logoInput").value.trim();
-    if (!name) return alert("Name fehlt");
 
-    await api("/api/vereine", {
-        method: "POST",
-         body: JSON.stringify({ vereinsname: name, url: logo })
-    });
-    alert("✅ Verein gespeichert");
-    $("vereinInput").value = "";
-    $("logoInput").value = "";
-    ladeVereine();
-}
+
+// async function vereinSpeichern() {
+//     const name = $("vereinInput").value.trim();
+//     const logo = $("logoInput").value.trim();
+//     if (!name) return alert("Name fehlt");
+
+//     await api("/api/vereine", {
+//         method: "POST",
+//          body: JSON.stringify({ vereinsname: name, url: logo })
+//     });
+//     alert("✅ Verein gespeichert");
+//     $("vereinInput").value = "";
+//     $("logoInput").value = "";
+//     ladeVereine();
+// }
 
 async function vereinLoeschen() {
     const id = $("vereineSelect").value;
@@ -211,7 +259,7 @@ async function ladeSpiele() {
     const heimId = heimSelect.value;
     const gastId = gastSelect.value;
     const gruppeId = gruppeSelect.value;
-console.log("Ausgewählte IDs - Heim:", heimId, "Gast:", gastId, "Gruppe:", gruppeId);
+// console.log("Ausgewählte IDs - Heim:", heimId, "Gast:", gastId, "Gruppe:", gruppeId);
     const heimName = heimSelect.selectedOptions[0]?.text;
     const gastName = gastSelect.selectedOptions[0]?.text;
     const gruppeName = gruppeSelect.selectedOptions[0]?.text;

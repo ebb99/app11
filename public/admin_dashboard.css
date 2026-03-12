@@ -61,6 +61,7 @@ select {
   padding: 0.5rem;
 }
 
+
 /* #spalte1 {
   background: white;
   border-style: solid;
@@ -108,6 +109,14 @@ select {
   background: white;
   /* border-style: solid; */
   padding: 0.5rem;
+  margin-bottom: 1rem;
+  cursor: pointer;
+}
+.selectBezeichnung {
+  background: white;
+  border-style: solid;
+  border-color: rgb(127, 141, 221);
+   padding: 0.5rem;
   margin-bottom: 1rem;
   cursor: pointer;
 }
