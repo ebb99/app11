@@ -26,21 +26,17 @@
 
     <section id="spalte2">
         <h2>Vereine</h2>
+
     <div class="container">
-
-
-        
-        <input type="text" id="vereinInput" class="form-control" placeholder="Vereinsname">
-
-
-        <button id="saveVerein">Speichern</button>
+    <input type="text" id="vereinInput" placeholder="Vereinsname">
+    <button id="saveVerein">Speichern</button>
     </div>
 
     <div class="container">
         <input type="text" id="logoInput" class="form-control" placeholder="Quellcode / URL des Logos                             ">
     </div>
 
-  <div class = "container" style="display:flex; gap:8px; margin-top:10px">
+  <div class = "container">
 
         <!-- <select class="form-control" id="vereineSelect"></select> -->
 
@@ -54,17 +50,18 @@
 
 
   <h2>Gruppen</h2>
-    <div style="display:flex; gap:8px; margin-top:10px">
+    <div style="display:flex; gap:8px;">
         <input type="text" id="gruppeInput" class="form-control" placeholder="Gruppenname neu">
         <button id="saveGruppe">Gruppe speichern</button>
     </div>
 
-    <div style="display:flex; gap:8px; margin-top:1px">
+    <div style="display:flex; gap:8px;">
     <div class="selectBezeichnung"><p>Alle Gruppen:</p></div>
-     <select class="form-control" id="allegruppen" placeholder="alle Spielgruppen"></select>
+     <!-- <select class="form-control" id="allegruppen" placeholder="alle Spielgruppen"></select> -->
+    <select  id="allegruppen" placeholder="alle Spielgruppen"></select>
     </div>
 
-    <div style="display:flex; gap:8px; margin-top:10px">
+    <div style="display:flex; gap:8px">
     <input list="gruppenliste" id="gruppenSelect" placeholder="Gruppe zum Löschen wählen">
     <datalist id="gruppenliste"></datalist>
     <button id="deleteGruppe">Gruppe löschen</button>

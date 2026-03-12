@@ -27,12 +27,16 @@ main {
     padding: 1rem;
 }
 
+p {
+  margin: 0;
+} 
+
 #gruppeInput,#gruppenSelect {
   background: white;
   border-style: solid;
-   padding: 0.5rem;
+   /* padding: 0.5rem; */
   margin-bottom: 1rem;
-  cursor: pointer;
+  margin-top: 0px;
 }
 
 button {
@@ -42,7 +46,7 @@ button {
   border-color: white;
   padding: 0.5rem;
   margin-bottom: 1rem;
-  cursor: pointer;
+  
 }
 select {
   background: white;
@@ -50,7 +54,7 @@ select {
   border-color: rgb(127, 141, 221);
    padding: 0.5rem;
   margin-bottom: 1rem;
-  cursor: pointer;
+ 
 }  
 
 #anstosszeitInput {
@@ -104,19 +108,30 @@ select {
 .container {
   display: flex;
   gap: 10px; /* Abstand zwischen Buttons */
+  margin-bottom: 1rem;
+
 }
 .form-control {
   background: white;
-  /* border-style: solid; */
-  padding: 0.5rem;
-  margin-bottom: 1rem;
-  cursor: pointer;
+  border-style: solid;
+  /* padding: 0.5rem; */
+  /* margin-bottom: 1rem; */
+  
+}
+
+.input-form-control {
+  background: white;
+  border-style: solid;
+  /* padding: 0.5rem; */
+  /* margin-bottom: 1rem; */
+  
 }
 .selectBezeichnung {
   background: white;
-  border-style: solid;
+  /* border-style: solid; */
   border-color: rgb(127, 141, 221);
-   padding: 0.5rem;
-  margin-bottom: 1rem;
-  cursor: pointer;
+   padding: 0.2rem;
+  /* margin-bottom: 1rem; */
+ margin-top:  0px;
+ margin-bottom:  2px
 }
