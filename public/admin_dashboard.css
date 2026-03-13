@@ -19,25 +19,13 @@ main {
   grid-area: main;
   display: grid;
   /* grid-template-columns:minmax(100px, 1fr) 2.0fr 1.0fr 1.0fr ; */
-  grid-template-columns: 20% 55% 15% 10% ;
+  grid-template-columns: 25% 50% 15% 10% ;
    gap: 0.2rem;
 
   
   background: #eee;
     padding: 1rem;
 }
-
-p {
-  margin: 0;
-} 
-
-/* #gruppeInput,#gruppenSelect {
-  background: white;
-  border-style: solid;
-   /* padding: 0.5rem; */
-  /* margin-bottom: 1rem;
-  margin-top: 0px; */
-
 
 button {
   background: blue;
@@ -48,32 +36,22 @@ button {
 
   
 }
-select {
-  background: white;
+ select {
+  background: rgb(233, 229, 229);
   border-style:  solid;
   border-color: rgb(127, 141, 221);
-   /* padding: 0.5rem;
-  margin-bottom: 1rem; */
- 
-}  
+  /* padding: 0.5rem;
+  margin-bottom: 1rem;  */
+  }
 
-#anstosszeitInput {
-  background: rgb(193, 202, 233);
-  border-style: solid;
-  /* font-size: 12px;
-  text-align: center;
-  padding: 0.5rem; */
-}
-
-
-/* #spalte1 {
+  
+#spalte1 {
   background: white;
   border-style: solid;
   border-color: red;
   text-align: center;
   padding: 0.2rem;
-} */
- 
+} 
   
 #spalte2 {
   background: white;
@@ -88,6 +66,7 @@ select {
   border-color: red;
   text-align: center;
   padding: 0.2rem;
+  /* align-items: center; */
 }
 #spalte4
  {
@@ -104,52 +83,81 @@ select {
   border-color: red;
   text-align: center;
   padding: 0.5rem;
-}
-.container {
-  display: flex;
-  gap: 10px; /* Abstand zwischen Buttons */
-  margin-bottom: 1rem;
+} 
 
-}
-/* .form-control {
-  background: white;
-  border-style: solid;
-  /* padding: 0.5rem; */
-  /* margin-bottom: 1rem; */
-  
-/* } */ */
-
-/* .input-form-control {
-  background: white;
-  border-style: solid; */
-  /* padding: 0.5rem; */
-  /* margin-bottom: 1rem; */
-  
-/* } */
-.selectBezeichnung {
-  background: white;
-  /* border-style: solid; */
-  border-color: rgb(127, 141, 221);
-   padding: 0.2rem;
-  /* margin-bottom: 1rem; */
- margin-top:  0px;
- margin-bottom:  2px
-}
 .spiel-zeile{
-    display: flex;
+    /* display: flex; */
     gap: 10px;          /* Abstand zwischen Feldern */
-    align-items: center;
+    align-items:  center;
+  
 }
 
 .spiel-zeile select,
 .spiel-zeile input
 {
-    /* flex: 1;            alle gleich breit */
+    /* flex: 1;             alle gleich breit */
     height: 32px;
     box-sizing: border-box;
 }
 
-
 .spiel-zeile button{
     flex: 0 0 140px;
+}
+
+.zeile1 {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 15px;
+  align-items: center;
+  width: 100%;
+}
+
+.zeile1 > * {
+  flex: 1; /* Alle direkten Kinder werden gleich groß */
+  min-height: 40px; /* Einheitliche Höhe */
+  padding: 8px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  /* border-radius: 4px; */
+}
+
+.zeile2 {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 15px;
+  align-items: center;
+  width: 100%;
+}
+
+.zeile2 > * {
+  flex: 1; /* Alle direkten Kinder werden gleich groß */
+  min-height: 40px; /* Einheitliche Höhe */
+  padding: 8px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  /* border-radius: 4px; */
+}
+
+
+
+
+/* 
+.zeile1 input,
+.zeile1 select
+.zeile1 p
+{
+  background: white;
+  border-style: solid;
+  border-color: rgb(127, 141, 221);
+  padding: 0.5rem;
+} */
+
+
+
+#logoInput {
+  background: white;
+  border-style: solid;
+  border-color: rgb(127, 141, 221);
+  padding: 0.5rem;
+  width: 100%;
 }

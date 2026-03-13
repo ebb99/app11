@@ -27,47 +27,42 @@
     <section id="spalte2">
         <h2>Vereine</h2>
 
-    <div class="container">
-    <input type="text" id="vereinInput" placeholder="Vereinsname">
-    <button id="saveVerein">Speichern</button>
+    <div class="zeile1">
+        <input type="text" id="vereinInput" placeholder="Vereinsname neu...">
+        <button id="saveVerein">Speichern</button>
     </div>
 
-    <div class="container">
-        <input type="text" id="logoInput" class="form-control" placeholder="Quellcode / URL des Logos                             ">
+    <div class="zeile1">
+        <input type="text" id="logoInput" class="form-control" placeholder="Quellcode / URL des Logos eingeben:">
     </div>
-    <div class="container">
+
+    <div class="zeile1">
          <select  id="allevereine" placeholder="alle Vereine"></select>
     </div>
-    
-  <div class = "container">
 
-        <!-- <select class="form-control" id="vereineSelect"></select> -->
-
-
+    <div class="zeile1">
         <input list="vereineList" id="vereineselect" placeholder="Verein suchen...">
         <datalist id="vereineList"></datalist>
-
         <button id="deleteVerein">Löschen</button>
     </div>
 
 
 
   <h2>Gruppen</h2>
-    <div style="display:flex; gap:8px;">
-        <input type="text" id="gruppeInput" class="form-control" placeholder="Gruppenname neu">
+     </div class=zeile2">
+        <input type="text" id="gruppeInput"  placeholder="Gruppenname neu....">
         <button id="saveGruppe">Gruppe speichern</button>
     </div>
 
-    <div style="display:flex; gap:8px;">
-    <div class="selectBezeichnung"><p>Alle Gruppen:</p></div>
-     <!-- <select class="form-control" id="allegruppen" placeholder="alle Spielgruppen"></select> -->
-    <select  id="allegruppen" placeholder="alle Spielgruppen"></select>
+    <div class="zeile2">
+        <p>Alle Gruppen:</p>
+        <select abc  id="allegruppen" placeholder="alle Spielgruppen"></select>
     </div>
 
-    <div style="display:flex; gap:8px">
-    <input list="gruppenliste" id="gruppenSelect" placeholder="Gruppe zum Löschen wählen">
-    <datalist id="gruppenliste"></datalist>
-    <button id="deleteGruppe">Gruppe löschen</button>
+    <div class="zeile2">
+        <input list="gruppenliste" id="gruppenSelect" placeholder="Gruppe zum Löschen wählen">
+        <datalist id="gruppenliste"></datalist>
+        <button id="deleteGruppe">Gruppe löschen</button>
     </div>
     
     </section>
@@ -76,34 +71,21 @@
         <h2>Spiel anlegen</h2>
 
         <div class="spiel-zeile">
-        <select class="form-control" id="gruppeSelect" placeholder="Spielgruppe"></select>
-        <input type="datetime-local" id="anstosszeitInput" class="form-control" placeholder="Anstoßzeit">
-
-        <input list="vereineList" id="heimInput" placeholder="Verein suchen...">
-        <input list="vereineList" id="gastInput" placeholder="Verein suchen...">
-
-        <!-- <select class="form-control" id="heimSelect"></select>
-        <select class="form-control" id="gastSelect"></select> -->
-
-        <button id="saveSpiel">Spiel anlegen</button>
+            <select class="form-control" id="gruppeSelect" placeholder="Spielgruppe"></select>
+            <input type="datetime-local" id="anstosszeitInput" class="form-control" placeholder="Anstoßzeit">
+            <input list="vereineList" id="heimInput" placeholder="Verein suchen...">
+            <input list="vereineList" id="gastInput" placeholder="Verein suchen...">
+            <button id="saveSpiel">Spiel anlegen</button>
         </div>
         <hr>
 
    
     <h2>Spiele Übersicht</h2>
 
-    <select id="spieleSelect"></select>
-
- 
-        <!-- <input type="number" id="heimtoreInput" placeholder="Heimtore" min="0">
-        <input type="number" id="gasttoreInput" placeholder="Gasttore" min="0"> -->
-    <!-- </div> -->
-
-    <!-- <button id="saveErgebnis">Ergebnis speichern & auswerten</button> -->
-
-        
-
+    <div class="spiel-zeile">  
+        <select id="spieleSelect" class ="spiel-zeile"></select>
         <button id="deleteSpiel">Spiel löschen</button>
+    </div>
 </section>
 
 <section id="spalte4"      
