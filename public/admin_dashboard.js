@@ -199,14 +199,33 @@ async function ladeVereine() {
     });
 }
 
+function getVereinId(inputId) {
+    const value = $(inputId).value;
+    const option = [...$("vereineList").options]
+        .find(o => o.value === value);
+    return option ? option.dataset.id : null;
+}
 
 async function vereinLoeschen() {
-    const id = $("vereineSelect").value;
-    if (!id) return;
-
+    // const id = $("gruppenSelect").value;
+    const id = getVereinId("vereineselect");
+    const name = $("vereineselect").value;
+    alert(`Lösche Verein "${name}" (ID: ${id})`);
+//   console.log("Lösche Verein mit ID:", id);
+    if (!id) return; 
     await api(`/api/vereine/${id}`, { method: "DELETE" });
-    ladeVereine();
+    ladeVereine();       
 }
+
+
+
+// async function vereinLoeschen() {
+//     const id = $("vereineSelect").value;
+//     if (!id) return;
+
+//     await api(`/api/vereine/${id}`, { method: "DELETE" });
+//     ladeVereine();
+// }
 
 // ===============================
 // Spiele
